@@ -28,13 +28,13 @@ export default function PDFViewer(props: any) {
       const duration = Math.round(endTime - startTimeRef.current);
       trackPageView(duration);
     };
-  }, [pageNumber]); // monitor pageNumber for changes
+  }, [pageNumber, trackPageView]); // monitor pageNumber for changes
 
   useEffect(() => {
     if (numPages > 0) {
       updateNumPages(numPages);
     }
-  }, [numPages]); // monitor numPages for changes
+  }, [numPages, updateNumPages]); // monitor numPages for changes
 
 
   function onDocumentLoadSuccess({
@@ -58,7 +58,7 @@ export default function PDFViewer(props: any) {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [trackPageView]);
 
   function onPageLoadSuccess() {
     setPageWidth(window.innerWidth);
