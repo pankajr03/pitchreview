@@ -35,6 +35,26 @@ export default function Login() {
         <div className="flex flex-col px-4 py-8 sm:px-16">
           <Button
             onClick={() => {
+              signIn("github", {
+                ...(next && next.length > 0 ? { callbackUrl: next } : {}),
+              });
+            }}
+            className="flex justify-center items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 488 512"
+              fill="currentColor"
+              className="h-4 w-4 mr-2"
+            >
+              <path d="M150 0 L75 200 L225 200 Z" />
+            </svg>
+            <span>Continue with Github</span>
+          </Button>
+        </div>
+        <div className="flex flex-col px-4 py-8 sm:px-16">
+          <Button
+            onClick={() => {
               signIn("google", {
                 ...(next && next.length > 0 ? { callbackUrl: next } : {}),
               });
@@ -51,6 +71,7 @@ export default function Login() {
             </svg>
             <span>Continue with Google</span>
           </Button>
+          
         </div>
       </div>
     </div>
