@@ -3,12 +3,24 @@ import { UserMinusIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { EventHandler, FormEventHandler, HtmlHTMLAttributes, useState } from "react";
+import { EventHandler, FormEventHandler, HtmlHTMLAttributes, useEffect, useState } from "react";
+import { string } from "zod";
 
 export default function Login() {
   const router = useRouter();
-  const [userInfo, setUserInfo] = useState({ email: '' })
+  const [userInfo, setUserInfo] = useState<{ email: string }>({ email: '' })
   const [isError, setIsError] = useState(false)
+
+  const { email } = router.query;
+  
+  useEffect(() => {
+    if (!router.isReady) {
+      return;  // NOTE: router.query might be empty during initial render
+    }
+    setUserInfo({...userInfo, email: email  })
+        
+  }, [email, router.isReady])
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
     if (userInfo.email !== '') {
@@ -56,7 +68,7 @@ export default function Login() {
               </label>
               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="email"
-                type="email" placeholder="me@gmail.com"
+                type="email" placeholder="me@gmail.com" defaultValue={userInfo.email}
                 onChange={({target}) => setUserInfo({...userInfo, email: target.value})}
               />
             </div>
@@ -74,48 +86,7 @@ export default function Login() {
 
 
         </div>
-        {/*
-        <div className="flex flex-col px-4 py-8 sm:px-16">
-           <Button
-            onClick={() => {
-              signIn("github", {
-                ...(next && next.length > 0 ? { callbackUrl: next } : {}),
-              });
-            }}
-            className="flex justify-center items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 488 512"
-              fill="currentColor"
-              className="h-4 w-4 mr-2"
-            >
-              <path d="M150 0 L75 200 L225 200 Z" />
-            </svg>
-            <span>Continue with Github</span>
-          </Button>
-        </div>
-        <div className="flex flex-col px-4 py-8 sm:px-16">
-          <Button
-            onClick={() => {
-              signIn("google", {
-                ...(next && next.length > 0 ? { callbackUrl: next } : {}),
-              });
-            }}
-            className="flex justify-center items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 488 512"
-              fill="currentColor"
-              className="h-4 w-4 mr-2"
-            >
-              <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-            </svg>
-            <span>Continue with Google</span>
-          </Button>
-          
-        </div> */}
+        
       </div>
     </div>
   );
