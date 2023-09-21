@@ -1,7 +1,8 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github"
-import TwitterProvider from "next-auth/providers/twitter"
+import EmailProvider from "next-auth/providers/email"
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import { CreateUserEmailProps, CustomUser } from "@/lib/types";
@@ -11,14 +12,52 @@ const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    CredentialsProvider({
+      type: 'credentials',
+      credentials: {
+        email: { label: 'Email' },
+      },
+      async authorize(credentials, req) {
+        const { email } = credentials as {
+          email: string,
+        }
+
+        if (!email) {
+          return null
+        }
+
+        const users = await prisma.user.findFirst({
+            where: {
+              email: email,
+            }
+        });
+    
+        if (users && users?.email !== '' ) {
+          return {
+            id: users?.id,
+            name: users?.name,
+            email: users?.email,
+            image: users?.image,
+
+          }
+        }
+        return null
+        
+      }
     }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID as string,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    // }),
+    // GithubProvider({
+    //   clientId: process.env.GITHUB_ID as string,
+    //   clientSecret: process.env.GITHUB_SECRET as string,
+    // }),
+    // EmailProvider({
+    //   server: process.env.MAIL_SERVER,
+    //   from: "<pankaj1211ranout@gmail.com>",
+    // })
+    
 
   ],
   adapter: PrismaAdapter(prisma),
@@ -37,6 +76,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
+    
     jwt: async ({ token, user }) => {
       if (!token.email) {
         return {};
@@ -65,6 +105,7 @@ export const authOptions: NextAuthOptions = {
       };
       await sendWelcomeEmail(params);
     }
+    
   },
 };
 

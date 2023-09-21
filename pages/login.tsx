@@ -1,10 +1,26 @@
 import { Button } from "@/components/ui/button";
+import { UserMinusIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { EventHandler, FormEventHandler, HtmlHTMLAttributes, useState } from "react";
 
 export default function Login() {
   const router = useRouter();
+  const [userInfo, setUserInfo] = useState({ email: '' })
+  const [isError, setIsError] = useState(false)
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
+    if (userInfo.email !== '') {
+      const res = await signIn('credentials', {
+        email: userInfo.email,
+        redirect: true
+
+      })
+    } else {
+      setIsError(true)
+    }
+  }
   const { next } = router.query as { next?: string };
 
   return (
@@ -31,9 +47,36 @@ export default function Login() {
           <h3 className="text-2xl text-foreground font-medium">
             Start sharing documents
           </h3>
+          
+          <form onSubmit={handleSubmit} >
+            {isError && <div className="text-left text-red-900">Email address cannot be empty!</div>}
+            <div className="mb-4">
+              <label className="block text-left text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                E-mail: 
+              </label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="email"
+                type="email" placeholder="me@gmail.com"
+                onChange={({target}) => setUserInfo({...userInfo, email: target.value})}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Sign In
+              </button>
+            </div>
+            
+          </form>
+
+
         </div>
+        {/*
         <div className="flex flex-col px-4 py-8 sm:px-16">
-          <Button
+           <Button
             onClick={() => {
               signIn("github", {
                 ...(next && next.length > 0 ? { callbackUrl: next } : {}),
@@ -72,7 +115,7 @@ export default function Login() {
             <span>Continue with Google</span>
           </Button>
           
-        </div>
+        </div> */}
       </div>
     </div>
   );
