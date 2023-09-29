@@ -8,10 +8,10 @@ import { string } from "zod";
 
 export default function Login() {
   const router = useRouter();
-  const [userEmail, setUserEmail] = useState<string>('')
+  const [userEmail, setUserEmail] = useState<string | string[]>('')
   const [isError, setIsError] = useState(false)
 
-  const email: string = router?.query!.email!;
+  const email: string | string[] = router?.query!.email!;
   // const ure = email
   useEffect(() => {
     if (!router.isReady) {
