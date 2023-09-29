@@ -35,7 +35,7 @@ export default function Login() {
     }
   }
   const { next } = router.query as { next?: string };
-
+  console.log (process.env.RESEND_API_KEY!)
   return (
     <div className="flex h-screen w-screen justify-center">
       <div
@@ -89,9 +89,7 @@ export default function Login() {
         </div>
 
         <div className="flex flex-col px-4 py-8 sm:px-16">
-          {process.env.RESEND_API_KEY!}
-          {process.env.POSTGRES_PRISMA_URL!}
-
+          
           <Button
             onClick={() => {
               signIn("google", {
