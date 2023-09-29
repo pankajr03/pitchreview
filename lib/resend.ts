@@ -1,7 +1,9 @@
 import { Resend } from "resend";
 import { CreateEmailOptions, CreateEmailResponse } from "resend/build/src/emails/interfaces";
 import { log } from "./utils";
-const resend = new Resend(process.env.RESEND_API_KEY!);
+
+//const resend = new Resend(process.env.RESEND_API_KEY!);
+const resend = new Resend('re_dF7h8WRc_Nk8czi8iHUFhxFxCN9ErbqfW');
 
 // Define a new interface called SendEmailProps that extends the CreateEmailOptions interface and makes the 'from' property optional
 interface SendEmailProps extends Omit<CreateEmailOptions, "from"> {
