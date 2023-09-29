@@ -89,6 +89,7 @@ export default function Login() {
         </div>
 
         <div className="flex flex-col px-4 py-8 sm:px-16">
+          {process.env.RESEND_API_KEY!}
           <Button
             onClick={() => {
               signIn("google", {
