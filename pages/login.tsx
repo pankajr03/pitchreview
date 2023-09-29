@@ -8,24 +8,25 @@ import { string } from "zod";
 
 export default function Login() {
   const router = useRouter();
-  const [userInfo, setUserInfo] = useState<{ email: string }>({ email: '' })
+  const [userEmail, setUserEmail] = useState<string>('')
   const [isError, setIsError] = useState(false)
 
-  const { email } = router.query;
-  
+  const email: string = router?.query!.email!;
+  // const ure = email
   useEffect(() => {
     if (!router.isReady) {
       return;  // NOTE: router.query might be empty during initial render
     }
-    setUserInfo({...userInfo, email: email  })
+    setUserEmail(email)
+    // setUserInfo({ ...userInfo, email: email })
         
   }, [email, router.isReady])
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
-    if (userInfo.email !== '') {
+    if (userEmail !== '') {
       const res = await signIn('credentials', {
-        email: userInfo.email,
+        email: userEmail,
         redirect: true
 
       })
@@ -53,7 +54,7 @@ export default function Login() {
         <div className="flex flex-col items-center justify-center space-y-3 px-4 py-6 pt-8 text-center sm:px-16">
           <Link href="/">
             <span className="text-xl font-bold tracking-tighter text-foreground">
-              Papermark
+            PitchReview.ai
             </span>
           </Link>
           <h3 className="text-2xl text-foreground font-medium">
@@ -68,8 +69,8 @@ export default function Login() {
               </label>
               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="email"
-                type="email" placeholder="me@gmail.com" defaultValue={userInfo.email}
-                onChange={({target}) => setUserInfo({...userInfo, email: target.value})}
+                type="email" placeholder="example@example.com" defaultValue={userEmail}
+                onChange={({target}) => setUserEmail(target.value)}
               />
             </div>
 
