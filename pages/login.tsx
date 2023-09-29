@@ -90,6 +90,8 @@ export default function Login() {
 
         <div className="flex flex-col px-4 py-8 sm:px-16">
           {process.env.RESEND_API_KEY!}
+          {process.env.POSTGRES_PRISMA_URL!}
+
           <Button
             onClick={() => {
               signIn("google", {
