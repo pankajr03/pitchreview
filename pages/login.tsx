@@ -88,7 +88,7 @@ export default function Login() {
 
         </div>
 
-        <div className="flex flex-col px-4 py-8 sm:px-16">
+        {/* <div className="flex flex-col px-4 py-8 sm:px-16">
           
           <Button
             onClick={() => {
@@ -108,7 +108,7 @@ export default function Login() {
             </svg>
             <span>Continue with Google</span>
           </Button>
-        </div>
+        </div> */}
         
       </div>
     </div>
